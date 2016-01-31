@@ -1,0 +1,59 @@
+{
+  "name": "generator-htz-module",
+  "version": "0.1.0",
+  "description": "Scaffold out a JS module using a gulp-rollup-babel-eslint stack for haaretz-dev",
+  "homepage": "https://www.github.com/haaretz/generator-htz-module/",
+  "author": {
+    "name": "TxHawks",
+    "email": "tofu.hawks@gmail.com"
+  },
+  "files": [
+    "generators"
+  ],
+  "main": "generators/index.js",
+  "keywords": [
+    "yeoman-generator",
+    "babel",
+    "rollup",
+    "module",
+    "es2015",
+    "es6"
+  ],
+  "dependencies": {
+    "chalk": "^1.0.0",
+    "generator-license": "^3.1.1",
+    "generator-travis": "^1.2.2",
+    "git-remote-origin-url": "^2.0.0",
+    "github-username": "^2.1.0",
+    "inquirer-npm-name": "^1.0.0",
+    "lodash": "^4.1.0",
+    "mkdirp": "^0.5.1",
+    "parse-author": "^0.2.0",
+    "yeoman-generator": "^0.21.1",
+    "yosay": "^1.0.2"
+  },
+  "devDependencies": {
+    "yeoman-assert": "^2.0.0",
+    "eslint-config-xo-space": "^0.7.0",
+    "gulp": "^3.9.0",
+    "gulp-eslint": "^1.0.0",
+    "gulp-exclude-gitignore": "^1.0.0",
+    "gulp-istanbul": "^0.10.3",
+    "gulp-mocha": "^2.0.0",
+    "gulp-plumber": "^1.0.0",
+    "gulp-nsp": "^2.1.0",
+    "gulp-coveralls": "^0.1.0"
+  },
+  "eslintConfig": {
+    "extends": "xo-space",
+    "env": {
+      "mocha": true
+    }
+  },
+  "repository": "haaretz/generator-htz-module",
+  "scripts": {
+    "prepublish": "gulp prepublish",
+    "test": "gulp"
+  },
+  "license": "MIT"
+}
