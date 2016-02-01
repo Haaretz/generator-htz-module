@@ -190,7 +190,6 @@ module.exports = generators.Base.extend({
           'gulp-htmlmin': '^1.3.0',
           'gulp-if': '^2.0.0',
           'gulp-ignore': '^2.0.1',
-          'gulp-imagemin': '^2.4.0',
           'gulp-load-plugins': '^1.2.0',
           'gulp-plumber': '^1.0.1',
           'gulp-rename': '^1.2.2',
@@ -222,7 +221,6 @@ module.exports = generators.Base.extend({
       mkdirp('src');
       mkdirp('src/scripts');
       mkdirp('src/scripts/lib');
-      mkdirp('src/images');
       mkdirp('styles');
       mkdirp('tests');
 

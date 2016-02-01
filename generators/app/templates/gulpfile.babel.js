@@ -93,36 +93,19 @@ gulp.task('html', () => {
     .pipe(gulp.dest('./'));
 });
 
-gulp.task('images', () => {
-  return gulp.src('src/images/**/*')
-    .pipe($.if($.if.isFile, $.cache($.imagemin({
-      progressive: true,
-      interlaced: true,
-      // don't remove IDs from SVGs, they are often used
-      // as hooks for embedding and styling
-      svgoPlugins: [{cleanupIDs: false}]
-    }))
-    .on('error', function (err) {
-      console.log(err);
-      this.end();
-    })))
-    .pipe(gulp.dest('images'));
-});
-
 gulp.task('extras', ['clean'], () => {
   return gulp.src([
     'src/*.*',
     '!src/*.html',
-    '!src/images',
     '!src/scripts'
   ], {
     dot: true
   }).pipe(gulp.dest('./'));
 });
 
-gulp.task('clean', del.bind(null, ['*.html', 'images', 'styles/**/*.css']));
+gulp.task('clean', del.bind(null, ['*.html', 'styles/**/*.css']));
 
-gulp.task('serve', ['html', 'styles', 'images'], () => {
+gulp.task('serve', ['html', 'styles'], () => {
   gulp.start('scripts');
 
   browserSync({
@@ -137,13 +120,11 @@ gulp.task('serve', ['html', 'styles', 'images'], () => {
   gulp.watch([
     '*.html',
     '*.js',
-    'images/**/*',
   ]).on('change', reload);
 
   gulp.watch('src/**/*.html', ['html']);
   gulp.watch('styles/**/*.scss', ['styles']);
   gulp.watch('src/scripts/**/*.js', ['scripts']);
-  gulp.watch('src/images/**/*', ['images']);
 });
 
 gulp.task('serve:test', ['scripts'], () => {
@@ -172,7 +153,7 @@ gulp.task('coveralls', function () {
     .pipe($.coveralls());
 });
 <% } -%>
-gulp.task('build', ['extras', 'html', 'images', 'styles', 'scripts']<% if (includeCoveralls) { -%>, () => {
+gulp.task('build', ['extras', 'html', 'styles', 'scripts']<% if (includeCoveralls) { -%>, () => {
    gulp.start('coveralls');
 }<% } -%>);
 
