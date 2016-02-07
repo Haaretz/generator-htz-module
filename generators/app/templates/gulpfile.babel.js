@@ -157,6 +157,8 @@ gulp.task('build', ['extras', 'html', 'styles', 'scripts']<% if (includeCoverall
    gulp.start('coveralls');
 }<% } -%>);
 
+
+
 gulp.task('default', ['clean'], () => {
   gulp.start('serve');
 });

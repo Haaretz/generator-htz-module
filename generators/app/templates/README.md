@@ -16,7 +16,7 @@ var <%= moduleSafeName %> = require('<%= moduleSafeName %>');
 import <%= moduleSafeName %> from '<%= moduleSafeName %>';
 ```
 
-## Runnig Tests
+## Running Tests
 
 
 ## License

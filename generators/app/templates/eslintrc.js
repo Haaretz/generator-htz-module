@@ -1,4 +1,4 @@
-module.exports = {
+{
   /* Extend airbnb's style-guide enforcement */
   "extends": "eslint-config-airbnb/base",
   "env": {

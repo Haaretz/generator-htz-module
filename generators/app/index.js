@@ -222,7 +222,7 @@ module.exports = generators.Base.extend({
       mkdirp('src/scripts');
       mkdirp('src/scripts/lib');
       mkdirp('styles');
-      mkdirp('tests');
+      mkdirp('test');
 
       this.fs.copyTpl(
         this.templatePath('gulpfile.babel.js'),
