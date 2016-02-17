@@ -7,6 +7,12 @@
     "name": "TxHawks",
     "email": "tofu.hawks@gmail.com"
   },
+  "contributors": [
+    {
+      "name": "Elia Grady",
+      "email": "admin@eliagrady.com"
+    }
+  ],
   "files": [
     "generators"
   ],
@@ -14,7 +20,7 @@
   "keywords": [
     "yeoman-generator",
     "babel",
-    "rollup",
+    "webpack",
     "module",
     "es2015",
     "es6"
@@ -29,20 +35,29 @@
     "lodash": "^4.1.0",
     "mkdirp": "^0.5.1",
     "parse-author": "^0.2.0",
+    "underscore.string": "^3.2.3",
     "yeoman-generator": "^0.21.1",
-    "yosay": "^1.0.2"
+    "yeoman-assert": "^2.1.1",
+    "yeoman-test": "^1.0.0",
+    "yosay": "^1.1.0"
   },
   "devDependencies": {
-    "yeoman-assert": "^2.0.0",
+    "babel-polyfill": "^6.3.14",
+    "babel-preset-es2015": "^6.5.0",
+    "babel-register": "^6.4.3",
+    "eslint": "^1.10.3",
     "eslint-config-xo-space": "^0.7.0",
     "gulp": "^3.9.0",
+    "gulp-babel": "^6.1.2",
+    "gulp-coveralls": "^0.1.0",
     "gulp-eslint": "^1.0.0",
     "gulp-exclude-gitignore": "^1.0.0",
     "gulp-istanbul": "^0.10.3",
     "gulp-mocha": "^2.0.0",
-    "gulp-plumber": "^1.0.0",
     "gulp-nsp": "^2.1.0",
-    "gulp-coveralls": "^0.1.0"
+    "gulp-plumber": "^1.0.0",
+    "mocha": "^2.4.5",
+    "yeoman-assert": "^2.0.0"
   },
   "eslintConfig": {
     "extends": "xo-space",

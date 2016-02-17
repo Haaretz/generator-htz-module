@@ -1,4 +1,4 @@
-module.exports = {
+{
   /* Extend airbnb's style-guide enforcement */
   "extends": "eslint-config-airbnb/base",
   "env": {
@@ -10,6 +10,9 @@ module.exports = {
     "brace-style": [2, "stroustrup", { "allowSingleLine": true  }],
     /* Warn about long line */
     "max-len": [1, 100, 2],
+    /* warn if there is a missing trailing comma on arrays or objects that span multiple lines,
+    and warns if there is a trailing comma present on single line arrays or objects. */
+    "comma-dangle": [2, "always-multiline"],
     /* Warn about use of console */
     "no-console": [1],
     /* Warn about use of debugger */
@@ -23,7 +26,7 @@ module.exports = {
     /* Warn when referencing an undefined variable */
     "no-undef": [1],
     /* Forbid expressions that are never used */
-    "no-unused-expressions": [2, { allowShortCircuit: true, allowTernary: true  }],
+    "no-unused-expressions": [2, { "allowShortCircuit": true, "allowTernary": true  }],
     /* Warn when declaring a variable without using it */
     "no-unused-vars": [1, {"vars": "local", "args": "none"}],
     "no-warning-comments": [1, {"terms": ["fixme", "todo"], "location": "start"}],

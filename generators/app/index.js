@@ -5,11 +5,12 @@ var extend = _.merge;
 var generators = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
-var parseAuthor = require('parse-author');
+//var parseAuthor = require('parse-author');
 var githubUsername = require('github-username');
 var path = require('path');
 var askName = require('inquirer-npm-name');
 var mkdirp = require('mkdirp');
+
 
 module.exports = generators.Base.extend({
   constructor: function () {
@@ -42,15 +43,15 @@ module.exports = generators.Base.extend({
       var done = this.async();
 
       askName({
-        name: 'name',
-        message: 'Your module Name',
+        name: 'moduleName',
+        message: 'Your Module Name',
         default: path.basename(process.cwd()),
         filter: _.kebabCase,
         validate: function (str) {
           return str.length > 0;
         }
-      }, this, function (name) {
-        this.props.name = name;
+      }, this, function (moduleName) {
+        this.props.moduleName = moduleName;
         done();
       }.bind(this));
     },
@@ -61,32 +62,35 @@ module.exports = generators.Base.extend({
       var prompts = [{
         name: 'description',
         message: 'Description',
+        default: '',
       }, {
         name: 'homepage',
         message: 'Project homepage url',
+        default: '',
       }, {
         name: 'authorName',
         message: 'Author\'s Name',
         default: this.user.git.name(),
+        store: true
       }, {
         name: 'authorEmail',
         message: 'Author\'s Email',
         default: this.user.git.email(),
-        store: true,
+        store: true
       }, {
         name: 'authorUrl',
         message: 'Author\'s Homepage',
-        store: true,
+        store: true
       }, {
         name: 'keywords',
         message: 'Package keywords (comma separated)',
         filter: function (words) {
           return words.split(/\s*,\s*/g);
-        },
+        }
       }, {
         name: 'license',
         message: 'Which license do you want to use?',
-        default: 'MIT',
+        default: 'MIT'
       }, {
         type: 'checkbox',
         name: 'deps',
@@ -95,44 +99,98 @@ module.exports = generators.Base.extend({
           name: 'bliss',
           value: 'includeBliss',
           checked: false,
+          default: false
         },{
           name: 'lodash-es',
           value: 'includeLodash',
           checked: false,
-        }],
+          default: false
+        }]
       }, {
         name: 'travis',
         type: 'confirm',
-        message: 'Include travis config?',
+        message: 'Include travis config?'
       }, {
         name: 'includeCoveralls',
         type: 'confirm',
-        message: 'Send coverage reports to coveralls',
+        message: 'Send coverage reports to coveralls'
+      }, {
+        name: 'includeSinon',
+        message: 'Would you like to include Sinon?',
+        type: 'confirm',
+        default: true
+      }, {
+        type: 'checkbox',
+        name: 'browsers',
+        message: 'What karma launchers would you like to include?',
+        choices: [{
+          name: 'PhantomJS',
+          value: 'includePhantomJS',
+          checked: true
+        }, {
+          name: 'Chrome',
+          value: 'includeChrome',
+          checked: false
+        }, {
+          name: 'Firefox',
+          value: 'includeFirefox',
+          checked: false
+        }]
       }];
 
       this.prompt(prompts, function (props) {
+        var browsers = props.browsers;
+
+        var browserIncluded = function(browsers, browser) {
+          return browsers && browsers.indexOf(browser) > -1;
+        };
+
+        var normalizeBrowserNames = function(browsers) {
+          return browsers.slice().map(function(item) {
+            return item.replace(/^include/, '');
+          });
+        };
+        //Parsing of certain props. Browsers and test specific.
+
+        var baseProps = {
+          //authorName: props.authorName || this.user.git.name(),
+          //authorEmail: props.authorEmail || this.user.git.email(),
+          includeSinon: props.includeSinon,
+          includeBliss: props.deps.indexOf('includeBliss') > -1,
+          includeLodash: props.deps.indexOf('includeLodash') > -1,
+          includePhantom: browserIncluded(browsers, 'includePhantomJS'),
+          includeChrome: browserIncluded(browsers, 'includeChrome'),
+          includeFirefox: browserIncluded(browsers, 'includeFirefox'),
+          browsers: normalizeBrowserNames(browsers)
+        };
+
+        // Use PhantomJS as a default launcher if launcher hasn't been chosen
+        if (!this.props.includeChrome && !this.props.includeFirefox) {
+          this.props.includePhantom = true;
+          this.props.browsers = ['PhantomJS'];
+        }
+        props = extend(props, baseProps);
         this.props = extend(this.props, props);
         done();
       }.bind(this));
 
-      this.props.moduleTitle = this.props.name
+      this.props.moduleTitle = this.props.moduleName
         .toLowerCase()
         .replace(/(?:^|\s)(\w)/g, function(l) { return l.toUpperCase(); });
-      this.props.moduleSafeName = _.camelCase(this.props.name);
-      this.props.kebabName = _.kebabCase(this.props.name);
+      this.props.moduleSafeName = _.camelCase(this.props.moduleName);
+      this.props.kebabName = _.kebabCase(this.props.moduleName);
     },
 
     askForGithubAccount: function () {
       var done = this.async();
-
-      githubUsername(this.props.authorEmail, function (err, username) {
+      var email = this.props.authorEmail || this.user.git.email();
+      githubUsername(email, function (err, username) {
         if (err) username = username || '';
 
         this.prompt({
           name: 'githubAccount',
           message: 'GitHub username or organization',
-          // default: username,
-          default: 'haaretz',
+          default: 'haaretz'
         }, function (prompt) {
           this.props.githubAccount = prompt.githubAccount;
           done();
@@ -143,8 +201,39 @@ module.exports = generators.Base.extend({
 
   writing: {
     deps: function () {
-      this.props.includeBliss = this.props.deps.indexOf('includeBliss') >= 0;
-      this.props.includeLodash = this.props.deps.indexOf('includeLodash') >= 0;
+      //var props = this.props;
+      //var browsers = props.browsers;
+      //
+      //var browserIncluded = function(browsers, browser) {
+      //  return browsers && browsers.indexOf(browser) > -1;
+      //};
+      //
+      //var normalizeBrowserNames = function(browsers) {
+      //  return browsers.slice().map(function(item) {
+      //    return item.replace(/^include/, '');
+      //  });
+      //};
+      //var baseProps = {
+      //  moduleName: _.kebabCase(props.moduleName),
+      //  moduleSafeName: _.camelCase(props.moduleName),
+      //  authorName: props.authorName || this.user.git.name(),
+      //  authorEmail: props.authorEmail || this.user.git.email(),
+      //  includeSinon: props.includeSinon,
+      //  includeBliss: props.deps && props.deps.indexOf('bliss') > -1,
+      //  includeLodash: props.deps && props.deps.indexOf('includeLodash') > -1,
+      //  includePhantom: browserIncluded(browsers, 'includePhantomJS'),
+      //  includeChrome: browserIncluded(browsers, 'includeChrome'),
+      //  includeFirefox: browserIncluded(browsers, 'includeFirefox'),
+      //  browsers: normalizeBrowserNames(browsers)
+      //};
+      //
+      //// Use PhantomJS as a default launcher if launcher hasn't been chosen
+      //if (!this.props.includeChrome && !this.props.includeFirefox) {
+      //  this.props.includePhantom = true;
+      //  this.props.browsers = ['PhantomJS'];
+      //}
+      //props = extend(props, baseProps);
+      //this.props = extend(this.props, props);
     },
 
     package: function () {
@@ -161,9 +250,9 @@ module.exports = generators.Base.extend({
         },
         repository: {
           type: 'git',
-          url: 'git+https://github.com/' + this.props.githubAccount + '/' + this.props.kebabName,
+          url: this.props.githubAccount + '/' + this.props.kebabName
         },
-        bugs: 'git+https://github.com/' + this.props.githubAccount + '/' + this.props.kebabName + '/issues',
+        bugs: this.props.githubAccount + '/' + this.props.kebabName + '/issues',
         private: true,
         files: [ this.props.projectRoot ],
         main: this.props.moduleSafeName + '.umd.min.js',
@@ -181,6 +270,7 @@ module.exports = generators.Base.extend({
           'eslint': '^1.10.3',
           'eslint-config-airbnb': '^4.0.0',
           'eslint-loader': '^1.2.0',
+          "eslint-plugin-babel": "^3.1.0",
           'gulp': '^3.9.0',
           'gulp-autoprefixer': '^3.1.0',
           'gulp-babel': '^6.1.1',
@@ -198,6 +288,22 @@ module.exports = generators.Base.extend({
           'gulp-sourcemaps': '^1.6.0',
           'gulp-uglify': '^1.5.1',
           'gulp-util': '^3.0.7',
+          'husky': '^0.10.1',
+          'isparta': '^4.0.0',
+          'karma': '^0.13.14',
+          'karma-mocha': '^0.2.1',
+          'karma-phantomjs-launcher': '^1.0.0',
+          'karma-sinon-chai': '^1.1.0',
+          'karma-spec-reporter': '0.0.23',
+          'mocha': '^2.3.3',
+          'mocha-lcov-reporter': '^1.0.0',
+          'node-babel': '^0.1.2',
+          'phantomjs-polyfill': '0.0.1',
+          'phantomjs-prebuilt': '^2.1.3',
+          'rimraf': '^2.4.3',
+          'chai': '^3.2.0',
+          'sinon': '^1.17.2',
+          'sinon-chai': '^2.8.0',
           'rollup': '^0.25.1',
           'rollup-plugin-babel': '^2.3.9',
           'rollup-plugin-commonjs': '^2.2.0',
@@ -210,9 +316,9 @@ module.exports = generators.Base.extend({
         dependencies: {}
       };
 
-      if (this.props.includeCoveralls) pkg.devDependencies['gulp-coveralls'] = '^0.1.4';
-      if (this.props.includeBliss) pkg.dependencies['blissfuljs'] = 'LeaVerou/bliss#gh-pages';
-      if (this.props.includeLodash) pkg.dependencies['lodash-es'] = '^4.1.0';
+      if (this.props.includeCoveralls) {pkg.devDependencies['gulp-coveralls'] = '^0.1.4'}
+      if (this.props.includeBliss) {pkg.dependencies['blissfuljs'] = 'LeaVerou/bliss#gh-pages'}
+      if (this.props.includeLodash) {pkg.dependencies['lodash-es'] = '^4.1.0'}
 
       this.fs.writeJSON(this.destinationPath('package.json'), pkg);
     },
@@ -222,7 +328,8 @@ module.exports = generators.Base.extend({
       mkdirp('src/scripts');
       mkdirp('src/scripts/lib');
       mkdirp('styles');
-      mkdirp('tests');
+      mkdirp('test');
+      mkdirp('test/specs');
 
       this.fs.copyTpl(
         this.templatePath('gulpfile.babel.js'),
@@ -239,6 +346,19 @@ module.exports = generators.Base.extend({
       this.fs.copyTpl(
         this.templatePath('rollup.umd.config.js'),
         this.destinationPath('rollup.umd.config.js'),
+        this.props
+      );
+
+
+      this.fs.copyTpl(
+        this.templatePath('karma.conf.js'),
+        this.destinationPath('karma.conf.js'),
+        this.props
+      );
+
+      this.fs.copyTpl(
+        this.templatePath('mocha.config.js'),
+        this.destinationPath('mocha.config.js'),
         this.props
       );
 
@@ -261,6 +381,11 @@ module.exports = generators.Base.extend({
         this.destinationPath('src/scripts/' + this.props.moduleSafeName + '.js'),
         this.props
       );
+      this.fs.copyTpl(
+        this.templatePath('test.js'),
+        this.destinationPath('test/specs/' + this.props.moduleSafeName + '.spec.js'),
+        this.props
+      );
     },
 
     dotFiles: function () {
@@ -277,8 +402,8 @@ module.exports = generators.Base.extend({
         this.destinationPath('.editorconfig')
       );
       this.fs.copy(
-        this.templatePath('eslintrc.js'),
-        this.destinationPath('.eslintrc.js')
+        this.templatePath('eslintrc'),
+        this.destinationPath('.eslintrc')
       );
       this.fs.copy(
         this.templatePath('gitattributes'),
@@ -314,8 +439,14 @@ module.exports = generators.Base.extend({
 
   install: function () {
     if (!this.options['skip-install']) {
-      this.npmInstall();
-      // this.installDependencies();
+      //this.npmInstall();
+      this.installDependencies({ bower: false });
     }
-  }
+  },
+
+  //postwriting: function() {
+  //  if (!this.options.skipInstall) {
+  //    this.spawnCommandSync('git', ['init']);
+  //  }
+  //},
 });

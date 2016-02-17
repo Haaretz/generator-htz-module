@@ -10,7 +10,6 @@ import del from 'del';
 import rollupConfUMD from './rollup.umd.config.js';
 import rollupConfES6 from './rollup.config.js';
 
-
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
@@ -38,25 +37,25 @@ gulp.task('styles', () => {
 function rollupBundle(type, config) {
   return () => {
     return rollup(config)
-    .on('error', function(e) {
-      console.error(e.stack);
-      this.emit('end');
-    })
-    // point to the entry file.
-    .pipe(source('<%= moduleSafeName %>.js', './src/scripts'))
-    .pipe($.plumber())
-    .pipe(buffer())
-    // tell gulp-sourcemaps to load the
-    // inline sourcemap produced by rollup-stream.
-    .pipe($.sourcemaps.init({loadMaps: true}))
-    .pipe($.rename({extname: `.${type}.js`}))
-    .pipe($.sourcemaps.write('.'))
-    .pipe(gulp.dest('./'))
-    .pipe($.sourcemaps.init({loadMaps: true}))
-    .pipe($.if(['*.js', '!*.es2015.js'], $.uglify()))
-    .pipe($.if(['*.js', '!*.es2015.js'], $.rename({extname: '.min.js'})))
-    .pipe($.if(['*.js', '!*.es2015.js'], $.sourcemaps.write('.')))
-    .pipe(gulp.dest('./'));
+      .on('error', function(e) {
+        console.error(e.stack);
+        this.emit('end');
+      })
+      // point to the entry file.
+      .pipe(source('<%= moduleSafeName %>.js', './src/scripts'))
+      .pipe($.plumber())
+      .pipe(buffer())
+      // tell gulp-sourcemaps to load the
+      // inline sourcemap produced by rollup-stream.
+      .pipe($.sourcemaps.init({loadMaps: true}))
+      .pipe($.rename({extname: `.${type}.js`}))
+      .pipe($.sourcemaps.write('.'))
+      .pipe(gulp.dest('./'))
+      .pipe($.sourcemaps.init({loadMaps: true}))
+      .pipe($.if(['*.js', '!*.es2015.js'], $.uglify()))
+      .pipe($.if(['*.js', '!*.es2015.js'], $.rename({extname: '.min.js'})))
+      .pipe($.if(['*.js', '!*.es2015.js'], $.sourcemaps.write('.')))
+      .pipe(gulp.dest('./'));
   }
 }
 
@@ -144,19 +143,6 @@ gulp.task('serve:test', ['scripts'], () => {
   gulp.watch('test/spec/**/*.js').on('change', reload);
   gulp.watch('test/spec/**/*.js', ['lint:test']);
 });
-<% if (includeCoveralls) { -%>
-
-gulp.task('coveralls', function () {
-  if (!process.env.CI) return;
-
-  return gulp.src(path.join(__dirname, 'coverage/lcov.info'))
-    .pipe($.coveralls());
-});
-<% } -%>
-gulp.task('build', ['extras', 'html', 'styles', 'scripts']<% if (includeCoveralls) { -%>, () => {
-   gulp.start('coveralls');
-}<% } -%>);
-
 gulp.task('default', ['clean'], () => {
   gulp.start('serve');
 });

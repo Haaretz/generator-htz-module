@@ -1,6 +1,9 @@
 'use strict';
+require('babel-polyfill'); //Support for ES6!
+require('babel-register');
 var path = require('path');
 var gulp = require('gulp');
+const babel = require('gulp-babel');
 var eslint = require('gulp-eslint');
 var excludeGitignore = require('gulp-exclude-gitignore');
 var mocha = require('gulp-mocha');
@@ -10,7 +13,7 @@ var plumber = require('gulp-plumber');
 var coveralls = require('gulp-coveralls');
 
 gulp.task('static', function () {
-  return gulp.src('**/*.js')
+  return gulp.src('generators/app/templates/**/*.js')
     .pipe(excludeGitignore())
     .pipe(eslint())
     .pipe(eslint.format())
@@ -22,20 +25,26 @@ gulp.task('nsp', function (cb) {
 });
 
 gulp.task('pre-test', function () {
-  return gulp.src('generators/**/*.js')
+  return gulp.src(['generators/**/*.js','!generators/app/templates/**/*.js'])
     .pipe(excludeGitignore())
+    .pipe(babel({
+      presets: ['es2015']
+    }))
     .pipe(istanbul({
       includeUntested: true
     }))
     .pipe(istanbul.hookRequire());
 });
 
-gulp.task('test', ['pre-test'], function (cb) {
+gulp.task('test', ['pre-test'],  function (cb) {
   var mochaErr;
 
   gulp.src('test/**/*.js')
     .pipe(plumber())
-    .pipe(mocha({reporter: 'spec'}))
+    .pipe(mocha({
+      reporter: 'spec',
+      timeout: 5000
+    }))
     .on('error', function (err) {
       mochaErr = err;
     })
@@ -54,7 +63,7 @@ gulp.task('coveralls', ['test'], function () {
     return;
   }
 
-  return gulp.src(path.join(__dirname, 'coverage/lcov.info'))
+  gulp.src(path.join(__dirname, 'coverage/lcov.info'))
     .pipe(coveralls());
 });
 

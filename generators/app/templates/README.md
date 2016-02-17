@@ -5,7 +5,7 @@ if (includeCoveralls) { %> [![Coverage percentage][coveralls-image]][coveralls-u
 
 ## Installation
 ```sh
-$ npm i -S <%= kebabName %>
+$ npm install --save <%= kebabName %> (or: npm i -S <%= kebabName %>)
 ```
 
 ## Usage
@@ -16,7 +16,7 @@ var <%= moduleSafeName %> = require('<%= moduleSafeName %>');
 import <%= moduleSafeName %> from '<%= moduleSafeName %>';
 ```
 
-## Runnig Tests
+## Running Tests
 
 
 ## License
