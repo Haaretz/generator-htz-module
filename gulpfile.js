@@ -3,7 +3,7 @@ require('babel-polyfill'); //Support for ES6!
 require('babel-register');
 var path = require('path');
 var gulp = require('gulp');
-const babel = require('gulp-babel');
+var babel = require('gulp-babel');
 var eslint = require('gulp-eslint');
 var excludeGitignore = require('gulp-exclude-gitignore');
 var mocha = require('gulp-mocha');
