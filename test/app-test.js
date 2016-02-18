@@ -6,7 +6,7 @@ var _ = require('lodash');
 var moduleName, moduleSafeName, kebabCaseModuleName, username, distFolder;
 
 describe('generator-htz-module:app', function () {
-
+  this.timeout(0);
   before(function () {
     moduleName = 'my module';
     moduleSafeName = _.camelCase(moduleName);

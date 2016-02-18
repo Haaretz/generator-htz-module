@@ -25,6 +25,7 @@ gulp.task('nsp', function (cb) {
 });
 
 gulp.task('pre-test', function () {
+  console.log("!process.env.CI:",!process.env.CI);
   return gulp.src(['generators/**/*.js','!generators/app/templates/**/*.js'])
     .pipe(excludeGitignore())
     .pipe(babel({
@@ -43,7 +44,7 @@ gulp.task('test', ['pre-test'],  function (cb) {
     .pipe(plumber())
     .pipe(mocha({
       reporter: 'spec',
-      timeout: 5000
+      timeout: !process.env.CI ? 5000 : 30000
     }))
     .on('error', function (err) {
       mochaErr = err;
