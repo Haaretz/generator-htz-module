@@ -37,7 +37,7 @@ gulp.task('styles', () => {
 function rollupBundle(type, config) {
   return () => {
     return rollup(config)
-      .on('error', function(e) {
+      .on('error', function (e) {
         console.error(e.stack);
         this.emit('end');
       })
@@ -56,7 +56,7 @@ function rollupBundle(type, config) {
       .pipe($.if(['*.js', '!*.es2015.js'], $.rename({extname: '.min.js'})))
       .pipe($.if(['*.js', '!*.es2015.js'], $.sourcemaps.write('.')))
       .pipe(gulp.dest('./'));
-  }
+  };
 }
 
 gulp.task('rollupES2015', rollupBundle('es2015', rollupConfES6));
@@ -64,7 +64,7 @@ gulp.task('rollupUMD', rollupBundle('umd', rollupConfUMD));
 
 gulp.task('rollupComp', ['rollupES2015', 'rollupUMD']);
 
-gulp.task('scripts', [ 'lint' ],  () => {
+gulp.task('scripts', ['lint'], () => {
   gulp.start('rollupComp');
 });
 

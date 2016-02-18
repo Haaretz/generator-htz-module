@@ -35,7 +35,7 @@ module.exports = generators.Base.extend({
     askForModuleName: function () {
       this.log(yosay(
         'Welcome to the ' + chalk.red('Haaretz module generator') + '! \n' +
-          'Lets start scaffolding your module.'
+        'Lets start scaffolding your module.'
       ));
 
       var done = this.async();
@@ -98,7 +98,7 @@ module.exports = generators.Base.extend({
           value: 'includeBliss',
           checked: false,
           default: false
-        },{
+        }, {
           name: 'lodash-es',
           value: 'includeLodash',
           checked: false,
@@ -139,12 +139,12 @@ module.exports = generators.Base.extend({
       this.prompt(prompts, function (props) {
         var browsers = props.browsers;
 
-        var browserIncluded = function(browsers, browser) {
+        var browserIncluded = function (browsers, browser) {
           return browsers && browsers.indexOf(browser) > -1;
         };
 
-        var normalizeBrowserNames = function(browsers) {
-          return browsers.slice().map(function(item) {
+        var normalizeBrowserNames = function (browsers) {
+          return browsers.slice().map(function (item) {
             return item.replace(/^include/, '');
           });
         };
@@ -174,7 +174,7 @@ module.exports = generators.Base.extend({
 
       this.props.moduleTitle = this.props.moduleName
         .toLowerCase()
-        .replace(/(?:^|\s)(\w)/g, function(l) { return l.toUpperCase(); });
+        .replace(/(?:^|\s)(\w)/g, function (l) { return l.toUpperCase(); });
       this.props.moduleSafeName = _.camelCase(this.props.moduleName);
       this.props.kebabName = _.kebabCase(this.props.moduleName);
     },
@@ -199,39 +199,7 @@ module.exports = generators.Base.extend({
 
   writing: {
     deps: function () {
-      //var props = this.props;
-      //var browsers = props.browsers;
-      //
-      //var browserIncluded = function(browsers, browser) {
-      //  return browsers && browsers.indexOf(browser) > -1;
-      //};
-      //
-      //var normalizeBrowserNames = function(browsers) {
-      //  return browsers.slice().map(function(item) {
-      //    return item.replace(/^include/, '');
-      //  });
-      //};
-      //var baseProps = {
-      //  moduleName: _.kebabCase(props.moduleName),
-      //  moduleSafeName: _.camelCase(props.moduleName),
-      //  authorName: props.authorName || this.user.git.name(),
-      //  authorEmail: props.authorEmail || this.user.git.email(),
-      //  includeSinon: props.includeSinon,
-      //  includeBliss: props.deps && props.deps.indexOf('bliss') > -1,
-      //  includeLodash: props.deps && props.deps.indexOf('includeLodash') > -1,
-      //  includePhantom: browserIncluded(browsers, 'includePhantomJS'),
-      //  includeChrome: browserIncluded(browsers, 'includeChrome'),
-      //  includeFirefox: browserIncluded(browsers, 'includeFirefox'),
-      //  browsers: normalizeBrowserNames(browsers)
-      //};
-      //
-      //// Use PhantomJS as a default launcher if launcher hasn't been chosen
-      //if (!this.props.includeChrome && !this.props.includeFirefox) {
-      //  this.props.includePhantom = true;
-      //  this.props.browsers = ['PhantomJS'];
-      //}
-      //props = extend(props, baseProps);
-      //this.props = extend(this.props, props);
+      // moved to post prompts stage
     },
 
     package: function () {
@@ -252,7 +220,7 @@ module.exports = generators.Base.extend({
         },
         bugs: this.props.githubAccount + '/' + this.props.kebabName + '/issues',
         private: true,
-        files: [ this.props.projectRoot ],
+        files: [this.props.projectRoot],
         main: this.props.moduleSafeName + '.umd.min.js',
         'jsnext:main': this.props.moduleSafeName + '.es2015.min.js',
         keywords: this.props.keywords,
@@ -313,9 +281,9 @@ module.exports = generators.Base.extend({
         dependencies: {}
       };
 
-      if (this.props.includeCoveralls) {pkg.devDependencies['gulp-coveralls'] = '^0.1.4'}
-      if (this.props.includeBliss) {pkg.dependencies['blissfuljs'] = 'LeaVerou/bliss#gh-pages'}
-      if (this.props.includeLodash) {pkg.dependencies['lodash-es'] = '^4.1.0'}
+      if (this.props.includeCoveralls) {pkg.devDependencies['gulp-coveralls'] = '^0.1.4';}
+      if (this.props.includeBliss) {pkg.dependencies['blissfuljs'] = 'LeaVerou/bliss#gh-pages';}
+      if (this.props.includeLodash) {pkg.dependencies['lodash-es'] = '^4.1.0';}
 
       this.fs.writeJSON(this.destinationPath('package.json'), pkg);
     },
@@ -399,8 +367,8 @@ module.exports = generators.Base.extend({
         this.destinationPath('.editorconfig')
       );
       this.fs.copy(
-        this.templatePath('eslintrc'),
-        this.destinationPath('.eslintrc')
+        this.templatePath('eslintrc.js'),
+        this.destinationPath('eslintrc.js')
       );
       this.fs.copy(
         this.templatePath('gitattributes'),
@@ -426,7 +394,7 @@ module.exports = generators.Base.extend({
 
   default: function () {
     if (this.props.Travis) {
-      this.composeWith('Travis', { options: { config: {
+      this.composeWith('Travis', {options: {config: {
         install: ['npm install'],
       }}}, {
         local: require.resolve('generator-travis/generators/app')
@@ -437,7 +405,7 @@ module.exports = generators.Base.extend({
   install: function () {
     if (!this.options['skip-install']) {
       //this.npmInstall();
-      this.installDependencies({ bower: false });
+      this.installDependencies({bower: false});
     }
   },
 

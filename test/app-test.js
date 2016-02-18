@@ -1,3 +1,4 @@
+/*eslint-disable */
 'use strict';
 var path = require('path');
 var assert = require('yeoman-assert');
@@ -25,7 +26,7 @@ describe('generator-htz-module:app', function () {
           //authorName: "Elia Grady",
           //authorEmail: "eliagrady19@gmail.com",
           //includeSinon: true,
-          deps: [],//"includeBliss","includeLodash"
+          deps: [], //"includeBliss","includeLodash"
           //includePhantom: true,
           //includeChrome: false,
           //includeFirefox: false,
@@ -41,14 +42,14 @@ describe('generator-htz-module:app', function () {
     it('creates files as expected', function () {
       assert.file([
         '.babelrc',
-        '.eslintrc',
+        'eslintrc.js',
         'readme.md',
         '.travis.yml',
         '.editorconfig',
         'src/scripts/' + moduleSafeName + '.js',
         'mocha.config.js',
         'karma.conf.js',
-        'test/specs/'+moduleSafeName+'.spec.js'
+        'test/specs/' + moduleSafeName + '.spec.js'
       ]);
     });
 
@@ -94,7 +95,7 @@ describe('generator-htz-module:app', function () {
           //authorName: "Elia Grady",
           //authorEmail: "eliagrady19@gmail.com",
           //includeSinon: true,
-          deps: ["includeBliss","includeLodash"],
+          deps: ['includeBliss', 'includeLodash'],
           //includePhantom: true,
           //includeChrome: false,
           //includeFirefox: false,
@@ -110,14 +111,14 @@ describe('generator-htz-module:app', function () {
     it('creates files as expected', function () {
       assert.file([
         '.babelrc',
-        '.eslintrc',
+        'eslintrc.js',
         'readme.md',
         '.travis.yml',
         '.editorconfig',
         'src/scripts/' + moduleSafeName + '.js',
         'mocha.config.js',
         'karma.conf.js',
-        'test/specs/'+moduleSafeName+'.spec.js'
+        'test/specs/' + moduleSafeName + '.spec.js'
       ]);
     });
 
@@ -155,10 +156,10 @@ describe('generator-htz-module:app', function () {
     it('adds the libraries to the dependencies', function () {
       assert.fileContent('package.json', /\"blissfuljs\"/);
       assert.fileContent('package.json', /\"lodash-es\"/);
-      assert.JSONFileContent('package.json',{
-        "dependencies": {
-          "blissfuljs": "LeaVerou/bliss#gh-pages",
-          "lodash-es": /.+/
+      assert.JSONFileContent('package.json', {
+        'dependencies': {
+          'blissfuljs': 'LeaVerou/bliss#gh-pages',
+          'lodash-es': /.+/
         }});
     });
   });
