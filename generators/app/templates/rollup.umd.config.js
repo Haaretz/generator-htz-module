@@ -1,7 +1,6 @@
 import babel from 'rollup-plugin-babel';
 import commonjs from 'rollup-plugin-commonjs';
 import npm from 'rollup-plugin-npm';
-import json from 'rollup-plugin-json';
 
 export default {
   entry: './src/scripts/<%= moduleSafeName %>.js',
@@ -12,9 +11,11 @@ export default {
   // external: [ imported, files, to, exclude, from, bundle ]
   plugins: [
     babel({
-      // exclude: 'node_modules/**'
+      presets: ['es2015-rollup'],
+      babelrc: false,
+      plugins: ['transform-object-assign'],
+      // exclude: 'node_modules/**/*',
     }),
-    json(),
     commonjs({
       include: 'node_modules/**'
       // exclude: [],

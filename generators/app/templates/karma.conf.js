@@ -2,7 +2,7 @@ import rollupConf from './rollup.config';
 module.exports = function (config) {
   config.set({
     files: [
-      // Each file acts as entry point for the webpack configuration
+      // Each file acts as entry point for the rollup configuration
       './node_modules/phantomjs-polyfill/bind-polyfill.js',
       'test/**/*.js'
     ],

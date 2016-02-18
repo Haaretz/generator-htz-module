@@ -1,11 +1,9 @@
 'use strict';
-
 var _ = require('lodash');
 var extend = _.merge;
 var generators = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
-//var parseAuthor = require('parse-author');
 var githubUsername = require('github-username');
 var path = require('path');
 var askName = require('inquirer-npm-name');
@@ -71,26 +69,26 @@ module.exports = generators.Base.extend({
         name: 'authorName',
         message: 'Author\'s Name',
         default: this.user.git.name(),
-        store: true
+        store: true,
       }, {
         name: 'authorEmail',
         message: 'Author\'s Email',
         default: this.user.git.email(),
-        store: true
+        store: true,
       }, {
         name: 'authorUrl',
         message: 'Author\'s Homepage',
-        store: true
+        store: true,
       }, {
         name: 'keywords',
         message: 'Package keywords (comma separated)',
         filter: function (words) {
           return words.split(/\s*,\s*/g);
-        }
+        },
       }, {
         name: 'license',
         message: 'Which license do you want to use?',
-        default: 'MIT'
+        default: 'MIT',
       }, {
         type: 'checkbox',
         name: 'deps',
@@ -107,9 +105,9 @@ module.exports = generators.Base.extend({
           default: false
         }]
       }, {
-        name: 'travis',
+        name: 'Travis',
         type: 'confirm',
-        message: 'Include travis config?'
+        message: 'Include Travis config?'
       }, {
         name: 'includeCoveralls',
         type: 'confirm',
@@ -118,7 +116,7 @@ module.exports = generators.Base.extend({
         name: 'includeSinon',
         message: 'Would you like to include Sinon?',
         type: 'confirm',
-        default: true
+        default: true,
       }, {
         type: 'checkbox',
         name: 'browsers',
@@ -126,15 +124,15 @@ module.exports = generators.Base.extend({
         choices: [{
           name: 'PhantomJS',
           value: 'includePhantomJS',
-          checked: true
+          checked: true,
         }, {
           name: 'Chrome',
           value: 'includeChrome',
-          checked: false
+          checked: false,
         }, {
           name: 'Firefox',
           value: 'includeFirefox',
-          checked: false
+          checked: false,
         }]
       }];
 
@@ -161,7 +159,7 @@ module.exports = generators.Base.extend({
           includePhantom: browserIncluded(browsers, 'includePhantomJS'),
           includeChrome: browserIncluded(browsers, 'includeChrome'),
           includeFirefox: browserIncluded(browsers, 'includeFirefox'),
-          browsers: normalizeBrowserNames(browsers)
+          browsers: normalizeBrowserNames(browsers),
         };
 
         // Use PhantomJS as a default launcher if launcher hasn't been chosen
@@ -190,7 +188,7 @@ module.exports = generators.Base.extend({
         this.prompt({
           name: 'githubAccount',
           message: 'GitHub username or organization',
-          default: 'haaretz'
+          default: 'haaretz',
         }, function (prompt) {
           this.props.githubAccount = prompt.githubAccount;
           done();
@@ -250,7 +248,7 @@ module.exports = generators.Base.extend({
         },
         repository: {
           type: 'git',
-          url: this.props.githubAccount + '/' + this.props.kebabName
+          url: this.props.githubAccount + '/' + this.props.kebabName,
         },
         bugs: this.props.githubAccount + '/' + this.props.kebabName + '/issues',
         private: true,
@@ -270,7 +268,6 @@ module.exports = generators.Base.extend({
           'eslint': '^1.10.3',
           'eslint-config-airbnb': '^4.0.0',
           'eslint-loader': '^1.2.0',
-          "eslint-plugin-babel": "^3.1.0",
           'gulp': '^3.9.0',
           'gulp-autoprefixer': '^3.1.0',
           'gulp-babel': '^6.1.1',
@@ -428,8 +425,8 @@ module.exports = generators.Base.extend({
   },
 
   default: function () {
-    if (this.props.travis) {
-      this.composeWith('travis', { options: { config: {
+    if (this.props.Travis) {
+      this.composeWith('Travis', { options: { config: {
         install: ['npm install'],
       }}}, {
         local: require.resolve('generator-travis/generators/app')
